@@ -43,6 +43,7 @@ class GradlePerfPlugin : Plugin<Project> {
 
         val perfGeneratedSourcesDir = project.layout.buildDirectory.dir("perf-generated-sources")
         val perfGeneratedClassesDir = project.layout.buildDirectory.dir("perf-generated-classes")
+        val perfGeneratedResourcesDir = project.layout.buildDirectory.dir("perf-generated-resources")
 
         val java = project.extensions.getByType(JavaPluginExtension::class.java)
         val toolchainService = project.extensions.getByType(JavaToolchainService::class.java)
@@ -51,6 +52,7 @@ class GradlePerfPlugin : Plugin<Project> {
             project,
             perfSourceSet,
             perfGeneratedSourcesDir,
+            perfGeneratedResourcesDir,
             java,
             toolchainService
         )
@@ -69,6 +71,7 @@ class GradlePerfPlugin : Plugin<Project> {
             perfSourceSet,
             perfGeneratedSourcesDir,
             perfGeneratedClassesDir,
+            perfGeneratedResourcesDir,
             runtimeConfiguration
         )
 
@@ -90,6 +93,7 @@ class GradlePerfPlugin : Plugin<Project> {
         perf: SourceSet,
         perfGeneratedSourcesDir: Provider<Directory>,
         perfGeneratedClassesDir: Provider<Directory>,
+        perfGeneratedResourcesDir: Provider<Directory>,
         runtimeConfiguration: Configuration?
     ): TaskProvider<Jar> {
         return project.tasks.register("perfJar", Jar::class.java) { spec ->
@@ -101,6 +105,7 @@ class GradlePerfPlugin : Plugin<Project> {
             spec.from(main.output)
             spec.from(perfGeneratedSourcesDir)
             spec.from(perfGeneratedClassesDir)
+            spec.from(perfGeneratedResourcesDir)
             spec.dependsOn("perfCompileGeneratedClasses")
             spec.duplicatesStrategy = INCLUDE
 
@@ -138,6 +143,7 @@ class GradlePerfPlugin : Plugin<Project> {
         project: Project,
         perfSourceSet: SourceSet,
         perfGeneratedSourcesDir: Provider<Directory>,
+        perfGeneratedResourcesDir: Provider<Directory>,
         java: JavaPluginExtension,
         toolchainService: JavaToolchainService
     ) {
@@ -146,6 +152,7 @@ class GradlePerfPlugin : Plugin<Project> {
             spec.getPerfClasspath().from(project.configurations.findByName("perfImplementation"))
             spec.getGeneratorType().convention("default")
             spec.getGeneratedSourcesDir().set(perfGeneratedSourcesDir)
+            spec.getGeneratedResourcesDir().set(perfGeneratedResourcesDir)
             spec.getRuntimeClasspath().from(perfSourceSet.runtimeClasspath)
             spec.getClassesDirsToProcess().from(perfSourceSet.output.classesDirs)
             spec.getJavaLauncher().convention(toolchainService.launcherFor(java.toolchain))

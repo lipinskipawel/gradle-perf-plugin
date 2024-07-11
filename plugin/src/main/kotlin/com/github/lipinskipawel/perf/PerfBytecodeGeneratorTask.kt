@@ -39,6 +39,9 @@ abstract class PerfBytecodeGeneratorTask : DefaultTask(), WithJavaToolchain {
     @OutputDirectory
     abstract fun getGeneratedSourcesDir(): DirectoryProperty
 
+    @OutputDirectory
+    abstract fun getGeneratedResourcesDir(): DirectoryProperty
+
     @TaskAction
     fun runTask() {
         cleanup(getGeneratedSourcesDir().get().asFile)
@@ -50,6 +53,7 @@ abstract class PerfBytecodeGeneratorTask : DefaultTask(), WithJavaToolchain {
                 spec.args(
                     classesDir,
                     getGeneratedSourcesDir().get().asFile,
+                    getGeneratedResourcesDir().get().asFile,
                     getGeneratorType().get()
                 )
                 spec.jvmArgs(getJvmArgs().get())
