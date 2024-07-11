@@ -1,0 +1,2 @@
+JMH S 38 com.github.lipinskipawel.FibsBenchmark S 71 com.github.lipinskipawel.jmh_generated.FibsBenchmark_fibClassic_jmhTest S 10 fibClassic S 10 Throughput E A 1 1 1 E E E E E E E E E E E E E E E E E 
+JMH S 38 com.github.lipinskipawel.FibsBenchmark S 71 com.github.lipinskipawel.jmh_generated.FibsBenchmark_fibTailRec_jmhTest S 10 fibTailRec S 10 Throughput E A 1 1 1 E E E E E E E E E E E E E E E E E 
